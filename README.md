@@ -79,6 +79,8 @@ GET /city/locations?city=cit_Gbqw4
 # ﻿Заметки по реализации, запуску и тестированию:
 
 - Для запуска приложения необходимо выбрать два проекта как Startup projects: MQ.Finder.Api и MQ.Finder.Web, а также Release Build
+
+  ![Startup projects](https://raw.github.com/alexey-makarov-1978/geo_loader/main/startup.PNG)
 - В решении реализован кэш с учетом того, что необходимо обрабатывать большое количество запросов. В тестовом примере кэш работает, но эффект от него минимален
 - В решении добавлены юнит тесты для проверки бинарного поиска. Цели 100% покрытия тестами не стояло
 - Чтение файла идёт через MemoryMarshal.Read и MemoryMarshal.Cast. Поскольку они работают только с value типами пришлось использовать fixed типы для строк и unsafe структуры
@@ -86,3 +88,4 @@ GET /city/locations?city=cit_Gbqw4
 - Реализована валидация входных данных на стороне Api. В случае ошибки пользователь видет её в UI
 - Фронтэнд выполнения минимальном html/css/jquery варианте с bootstrap для красоты
 
+![Logs](https://raw.github.com/alexey-makarov-1978/geo_loader/main/logs.PNG)
