@@ -1,0 +1,14 @@
+﻿
+#menu {
+    width: 20%;
+    float: left;
+}
+
+#content {
+    width: 75%;
+    float: right;
+}
+
+.hidden {
+    display: none;
+}
