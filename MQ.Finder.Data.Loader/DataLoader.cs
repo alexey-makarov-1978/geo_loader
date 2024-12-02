@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using MQ.Finder.Data.Loader.Entities;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -6,15 +7,27 @@ using System.Runtime.InteropServices;
 
 namespace MQ.Finder.Data.Loader
 {
+    /// <summary>
+    /// Data base loader. Path to file in appsettings.json
+    /// </summary>
     public class DataLoader : IDataLoader
     {
         private readonly GeoBase _data;
         private readonly ILogger<DataLoader> _logger;
 
-        public DataLoader(ILogger<DataLoader> logger) 
+        public DataLoader(ILogger<DataLoader> logger, IConfiguration configuration) 
         {
             _logger = logger;
-            _data = LoadData(@"data\geobase.dat");
+
+            string dataFilePath = configuration.GetSection("GeoBase")["DataFilePath"];
+            _logger.LogInformation($"Loading database from {dataFilePath}");
+
+            if (string.IsNullOrEmpty(dataFilePath))
+            {
+                throw new ArgumentException("DataFilePath is not configured in appsettings.json");
+            }
+
+            _data = LoadData(dataFilePath);
         }
 
         public GeoBase Data 

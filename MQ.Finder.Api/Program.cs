@@ -1,5 +1,6 @@
 
 using MQ.Finder.Data.Finder;
+using MQ.Finder.Data.Finder.Cache;
 using MQ.Finder.Data.Loader;
 
 namespace MQ.Finder.Api
@@ -24,8 +25,11 @@ namespace MQ.Finder.Api
 
             builder.Services.AddControllers();
 
+            builder.Services.AddMemoryCache();
+
+            builder.Services.AddSingleton<ICacheService, CacheService>();
             builder.Services.AddSingleton<IDataLoader, DataLoader>();
-            builder.Services.AddScoped<IDataFinder, DataFinder>();
+            builder.Services.AddScoped<IDataFinder, CachedDataFinder>();
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

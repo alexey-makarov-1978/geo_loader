@@ -6,9 +6,12 @@ using System.Diagnostics;
 
 namespace MQ.Finder.Data.Finder
 {
+    /// <summary>
+    /// Search engine for database. Search by Ip or City
+    /// </summary>
     public class DataFinder : IDataFinder
     {
-        private readonly ILogger<DataFinder> _logger;
+        protected readonly ILogger<DataFinder> _logger;
         private readonly IDataLoader _dataLoader;
 
         public DataFinder(ILogger<DataFinder> logger, IDataLoader dataLoader)
@@ -17,7 +20,7 @@ namespace MQ.Finder.Data.Finder
             _dataLoader = dataLoader;
         }
 
-        public IEnumerable<Location> FindLocationByIp(string ip)
+        public virtual IEnumerable<Location> FindLocationByIp(string ip)
         {
             _logger.LogInformation($"FindLocationByIp starts searching by {ip}");
             var stopwatch = Stopwatch.StartNew();
@@ -36,7 +39,7 @@ namespace MQ.Finder.Data.Finder
                 if (ipRange.IpFrom <= ipNumber && ipRange.IpTo >= ipNumber)
                 {
                     stopwatch.Stop();
-                    _logger.LogInformation($"FindLocationByIp found locationfor ip={ip}. Search time {stopwatch.ElapsedMilliseconds} ms");
+                    _logger.LogInformation($"FindLocationByIp found location for ip={ip}. Search time {stopwatch.ElapsedMilliseconds} ms");
 
                     return [_dataLoader.Data.Locations[ipRange.LocationIndex]];
                 }
@@ -57,7 +60,7 @@ namespace MQ.Finder.Data.Finder
             return [];
         }
 
-        public IEnumerable<Location> FindLocationsByCity(string city)
+        public virtual IEnumerable<Location> FindLocationsByCity(string city)
         {
             _logger.LogInformation($"FindLocationsByCity starts searching by {city}");
             var stopwatch = Stopwatch.StartNew();
@@ -105,6 +108,8 @@ namespace MQ.Finder.Data.Finder
                 var previous = result - 1;
                 var next = result + 1;
 
+                // since city indexes are sorted we just go forward and back
+                // to check if the nearby indexes fit our search criteria
                 while (previous >= 0)
                 {
                     var location = _dataLoader.Data.Locations[cityIndices[previous--]];
